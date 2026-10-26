@@ -11,8 +11,11 @@ export default {
       });
     }
 
-    if (publicURL.pathname === libraryPath) {
-      publicURL.pathname += "/";
+    if (
+      publicURL.pathname === libraryPath ||
+      publicURL.pathname === `${libraryPath}/`
+    ) {
+      publicURL.pathname = `${libraryPath}/documentation/twitch/`;
       return Response.redirect(publicURL.href, 308);
     }
 

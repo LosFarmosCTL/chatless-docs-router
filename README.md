@@ -6,6 +6,9 @@ Cloudflare Worker serving independently published documentation sites under
 - `/swift-twitch-client/…` → `https://losfarmosctl.github.io/swift-twitch-client/…`
 - All other paths → `CHATLESS_DOCS_ORIGIN`, or `404` until configured.
 
+Both `/swift-twitch-client` and `/swift-twitch-client/` redirect directly to
+`/swift-twitch-client/documentation/twitch/`, skipping the upstream HTML redirect.
+
 Documentation updates publish from their own repositories without redeploying
 this router. The Worker preserves paths and queries, keeps upstream redirects on
 the public hostname, and accepts `GET` and `HEAD`.

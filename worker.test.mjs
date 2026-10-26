@@ -8,16 +8,20 @@ function mockOrigin(t, response) {
   return t.mock.method(globalThis, "fetch", async () => response);
 }
 
-test("adds the library's trailing slash without losing the query", async (t) => {
+test("redirects both library root URLs straight to DocC without fetching the HTML redirect", async (t) => {
   const origin = mockOrigin(t, new Response("unused"));
-  const result = await worker.fetch(
-    new Request(`${publicOrigin}/swift-twitch-client?q=1`),
-  );
-  assert.equal(result.status, 308);
-  assert.equal(
-    result.headers.get("Location"),
-    `${publicOrigin}/swift-twitch-client/?q=1`,
-  );
+  for (const path of ["/swift-twitch-client", "/swift-twitch-client/"]) {
+    for (const method of ["GET", "HEAD"]) {
+      const result = await worker.fetch(
+        new Request(`${publicOrigin}${path}?q=1`, { method }),
+      );
+      assert.equal(result.status, 308);
+      assert.equal(
+        result.headers.get("Location"),
+        `${publicOrigin}/swift-twitch-client/documentation/twitch/?q=1`,
+      );
+    }
+  }
   assert.equal(origin.mock.callCount(), 0);
 });
 
@@ -91,7 +95,7 @@ test("leaves external redirects unchanged", async (t) => {
     }),
   );
   const result = await worker.fetch(
-    new Request(`${publicOrigin}/swift-twitch-client/`),
+    new Request(`${publicOrigin}/swift-twitch-client/documentation/twitch/`),
   );
   assert.equal(result.headers.get("Location"), "https://example.com/");
 });
@@ -197,7 +201,7 @@ test("preserves a bodyless cache validation response", async (t) => {
     new Response(null, { status: 304, headers: { ETag: '"version-1"' } }),
   );
   const result = await worker.fetch(
-    new Request(`${publicOrigin}/swift-twitch-client/`),
+    new Request(`${publicOrigin}/swift-twitch-client/documentation/twitch/`),
   );
   assert.equal(result.status, 304);
   assert.equal(result.headers.get("ETag"), '"version-1"');
