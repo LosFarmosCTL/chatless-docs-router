@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: npm ci
       - run: npm run check
 
@@ -32,7 +32,7 @@ jobs:
       group: production-worker
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: npm ci
       - name: Check deployment credentials
         env:
