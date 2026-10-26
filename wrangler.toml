@@ -1,0 +1,11 @@
+name = "chatless-documentation-router"
+main = "worker.mjs"
+compatibility_date = "2026-10-26"
+workers_dev = false
+
+[[routes]]
+pattern = "docs.chatless.app"
+custom_domain = true
+
+# [vars]
+# CHATLESS_DOCS_ORIGIN = "https://losfarmosctl.github.io/chatless-docs/"
